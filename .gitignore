@@ -1,0 +1,6 @@
+# Configuración local del editor/Claude (no forma parte de la web)
+.claude/
+.vercel/
+node_modules/
+.DS_Store
+Thumbs.db

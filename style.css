@@ -1,0 +1,73 @@
+:root {
+  --bg: #ffffff;
+  --fg: #000000;
+  --muted: #666666;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Montserrat", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Título fijo en el centro exacto de la pantalla */
+.title {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(90vw, 14ch);
+  font-weight: 900;
+  font-size: clamp(2.5rem, 9vw, 7rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-align: center;
+  user-select: none;
+}
+
+/* Mano + texto: se posiciona desde script.js */
+.high-five {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  will-change: transform;
+  user-select: none;
+}
+
+.high-five.ready {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hand {
+  width: 56px;
+  height: 56px;
+}
+
+.label {
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .high-five.ready {
+    transition: none;
+  }
+}
