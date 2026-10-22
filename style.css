@@ -22,6 +22,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Ocupa toda la pantalla para que la sacudida no descoloque lo que hay dentro */
+main {
+  position: fixed;
+  inset: 0;
+}
+
 /* Título fijo en el centro exacto de la pantalla */
 .title {
   position: fixed;
@@ -35,6 +41,71 @@ body {
   letter-spacing: -0.04em;
   text-align: center;
   user-select: none;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.caught .title {
+  opacity: 0;
+  filter: blur(6px);
+}
+
+/* "¡CHOCA!" gigante al atrapar la mano */
+.boom {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.6);
+  font-weight: 900;
+  font-size: clamp(4rem, 18vw, 14rem);
+  letter-spacing: -0.05em;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.caught .boom {
+  animation: boom 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes boom {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+  15% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+  30% { transform: translate(-50%, -50%) scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Sacudida de pantalla */
+.caught main {
+  animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate(-2px, 1px); }
+  20%, 80% { transform: translate(4px, -2px); }
+  30%, 50%, 70% { transform: translate(-6px, 3px); }
+  40%, 60% { transform: translate(6px, -3px); }
+}
+
+/* Cronómetro y récord */
+.stats {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  width: calc(100vw - 32px);
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
+  user-select: none;
+}
+
+.stats strong {
+  color: var(--fg);
+  font-weight: 900;
 }
 
 /* Mano + texto: se posiciona desde script.js */
@@ -57,6 +128,28 @@ body {
 .hand {
   width: 56px;
   height: 56px;
+  transform-origin: 50% 90%;
+}
+
+/* Cuanto más cansada, más tiembla */
+.high-five[data-mood="tired"] .hand {
+  animation: pant 0.9s ease-in-out infinite;
+}
+
+.caught .high-five .hand {
+  animation: clap 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes pant {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(-6deg) scale(0.96); }
+}
+
+@keyframes clap {
+  0% { transform: scale(1) rotate(0deg); }
+  30% { transform: scale(1.5) rotate(-18deg); }
+  60% { transform: scale(0.9) rotate(10deg); }
+  100% { transform: scale(1) rotate(0deg); }
 }
 
 .label {
@@ -66,8 +159,52 @@ body {
   white-space: nowrap;
 }
 
+/* Al acercarse, el cursor se convierte en otra mano */
+body.near,
+body.near * {
+  cursor: none;
+}
+
+.cursor-hand {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 10;
+}
+
+.cursor-hand svg {
+  width: 100%;
+  height: 100%;
+  transform: scaleX(-1) rotate(-20deg);
+}
+
+body.near .cursor-hand {
+  opacity: 1;
+}
+
+.confetti {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .high-five.ready {
     transition: none;
+  }
+
+  .caught main,
+  .caught .high-five .hand,
+  .high-five[data-mood="tired"] .hand {
+    animation: none;
   }
 }
